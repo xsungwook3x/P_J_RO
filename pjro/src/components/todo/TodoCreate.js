@@ -1,6 +1,8 @@
 import React,{useState} from 'react';
 import styled, {css} from 'styled-components';
 import {MdAdd} from 'react-icons/md';
+import { todoListState } from '../../recoil/Recoil';
+import {useRecoilState} from 'recoil';
 
 const CircleButton=styled.button`
 background: gray;
@@ -51,6 +53,7 @@ const InsertFormPositioner = styled.div`
     bottom: 0;
     left: 0;
     position: absolute;
+    text-align:center;
 `;
 
 const InsertForm = styled.form`
@@ -58,12 +61,32 @@ const InsertForm = styled.form`
     padding-left: 32px;
     padding-top: 32px;
     padding-right: 32px;
-    padding-bottom: 72px;
-
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+    padding-bottom: 12px;
+    
+    
     border-top: 1px solid #e9ecef;
 `;
+
+const InsertAllForm = styled.div`
+    background: #f8f9fa;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+
+`
+
+const InsertButton = styled.button`
+    background-color: #9E58D6;
+    color: white;
+    font-size:20px;
+    margin-top:5px;
+    margin-bottom: 50px;
+    height: 35px;
+    width: 35px;
+    
+    border-radius: 50%;
+    border:none;
+
+`
 
 const Input = styled.input`
     padding: 12px;
@@ -75,18 +98,49 @@ const Input = styled.input`
     box-sizing: border-box;
 `;
 
+let id = 5;
+function getId() {
+    return id++;
+}
+
 function TodoCreate() {
     const [open, setOpen] = useState(false);
+    const [input,setInput]=useState('');
+    const [todoItems,setTodoItems]=useRecoilState(todoListState);
 
     const onToggle = () => setOpen(!open);
+
+    const addItem=()=>{
+        if(input!==''){
+            setTodoItems(() =>[
+                ...todoItems,
+                    {
+                        id: getId(),
+                        text: input,
+                        done: false
+                    }
+                ]
+            )
+            setInput('')
+        }
+    }
+
+    const onChange=(e)=>{setInput(e.target.value)};
+
+    
 
     return (
     <>
         {open && (
             <InsertFormPositioner>
-                <InsertForm>
-                    <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" />
-                </InsertForm>
+                <InsertAllForm onClick={console.log('나다')}>
+                    <InsertForm>
+                        <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" value={input} onChange={onChange}/>
+                    
+                    </InsertForm>
+                    <InsertButton type="button" onClick={addItem}>+</InsertButton>
+                </InsertAllForm>
+                
             </InsertFormPositioner>
         )}
         <CircleButton onClick={onToggle} open={open}>

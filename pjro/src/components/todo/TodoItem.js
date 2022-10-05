@@ -1,6 +1,8 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
 import {MdDone,MdDelete} from 'react-icons/md';
+import {useRecoilState} from 'recoil';
+import { todoListState } from '../../recoil/Recoil';
 
 const Remove = styled.div`
     display: flex;
@@ -57,13 +59,37 @@ const Text = styled.div`
     `}
 `;
 
-function TodoItem({ id, done, text }) {
+const replaceItemAtIndex =(arr,index,newValue)=>{
+    return [...arr.slice(0,index),newValue,...arr.slice(index+1)];
+}
+
+const removeItemAtIndex =(arr,index)=>{
+    return [...arr.slice(0,index),...arr.slice(index+1)];
+}
+
+function TodoItem({ item }) {
+
+    const [todoList,setTodoList]=useRecoilState(todoListState);
+    const index=todoList.findIndex((listItem)=> listItem.id === item.id);
+
+    const toggleItemCompletion = () => {
+        const newList = replaceItemAtIndex(todoList,index,{...item,done:!item.done});
+
+        setTodoList(newList)
+    }
+
+    const deleteItem = () => {
+        const newList=removeItemAtIndex(todoList,index);
+
+        setTodoList(newList);
+    }
+
     return (
     <TodoItemBlock>
-        <CheckCircle done={done}>{done && <MdDone />}</CheckCircle>
-        <Text done={done}>{text}</Text>
+        <CheckCircle done={item.done} onClick={toggleItemCompletion}>{item.done && <MdDone />}</CheckCircle>
+        <Text done={item.done}>{item.text}</Text>
         <Remove>
-            <MdDelete />
+            <MdDelete onClick={deleteItem}/>
         </Remove>
     </TodoItemBlock>
     );
