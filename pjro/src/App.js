@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import {createGlobalStyle} from 'styled-components';
 import Todo from './components/todo/Todo';
 import {RecoilRoot} from 'recoil';
+import {BrowserRouter,Routes,Route,Link} from "react-router-dom";
+import Header from './components/Header';
+import Routine from './components/routine/Routine';
 
 
 const GlobalStyle=createGlobalStyle`
@@ -14,29 +17,20 @@ const GlobalStyle=createGlobalStyle`
 
 function App() {
   
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: '리액트 기초 알아보기',
-      checked: true,
-    },
-    {
-      id: 2,
-      text: '컴포넌트 스타일링 하기',
-      checked: true,
-    },
-    {
-      id: 3,
-      text: '투두리스트 만들기',
-      checked: false,
-    },
-  ]);
-
+  
   return (
     <RecoilRoot>
     <div className="App">
+
       <GlobalStyle/>
-      <Todo/>
+      <BrowserRouter>
+        <Header/>
+        <Routes>
+          <Route path="/todo" element={<Todo/>}></Route>
+          <Route path="/routine" element={<Routine/>}></Route>
+        </Routes>
+        
+      </BrowserRouter>
 
     </div>
     </RecoilRoot>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TodoHeadBlock = styled.div`
+const RoutineHeadBlock = styled.div`
     padding-top: 48px;
     padding-left: 32px;
     padding-right: 32px;
@@ -28,7 +28,8 @@ const TodoHeadBlock = styled.div`
     }
 `;
 
-function TodoHead(){
+function RoutineHead(){
+
     const days=['일','월','화','수','목','금','토'];
 
     let today = new Date();   
@@ -37,14 +38,13 @@ function TodoHead(){
     let month = today.getMonth() + 1;  // 월
     let date = today.getDate();  // 날짜
     let day = today.getDay();  // 요일
-    
+
     return(
-        <TodoHeadBlock>
+        <RoutineHeadBlock>
             <h1>{year}년 {month}월 {date}일</h1>
             <div className='day'>{days[day]}요일</div>
-            <div className='tasks-left'>할 일 2개 남음</div>
-        </TodoHeadBlock>
+        </RoutineHeadBlock>
     )
 }
 
-export default TodoHead;
+export default RoutineHead;
