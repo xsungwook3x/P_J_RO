@@ -24,3 +24,8 @@ export const todoListState=atom({
         done: false
     }]
 })
+
+export const routineListState=atom({
+    key:'routineListState',
+    default:[]
+})
