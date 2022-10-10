@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import {routineListState} from '../../recoil/Recoil.js';
 import { useRecoilState } from "recoil";
+import RoutineItem from './RoutineItem.js';
 
 const RoutineListBlock=styled.div`
     flex: 1;
@@ -18,7 +19,11 @@ function RoutineList() {
 
     return (
     <RoutineListBlock>
-        
+        {
+            routineItems.map((item)=>{
+                return <RoutineItem item={item}/>
+            })
+        }
     </RoutineListBlock>)
 }
 

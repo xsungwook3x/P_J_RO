@@ -27,5 +27,18 @@ export const todoListState=atom({
 
 export const routineListState=atom({
     key:'routineListState',
-    default:[]
+    default:[
+        {
+            id: 1,
+            text: 'CS 스터디',
+            mon: true,
+            tue: true,
+            wed: false,
+            thr: false,
+            fri: false,
+            sat: false,
+            sun: false
+
+        }
+    ]
 })
