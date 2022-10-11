@@ -1,16 +1,17 @@
 import React,{useState} from 'react';
 import styled, {css} from 'styled-components';
 import {MdAdd} from 'react-icons/md';
-import { todoListState } from '../../recoil/Recoil';
+import { routineListState } from '../../recoil/Recoil';
 import {useRecoilState} from 'recoil';
+import { Button } from 'bootstrap';
 
 const CircleButton=styled.button`
 background: gray;
 &:hover {
-    background:#9E58D6
+    background: orange;
 }
 &:active {
-    background: #9E58D6;
+    background: orange;
 }
 
 z-index: 5;
@@ -56,12 +57,12 @@ const InsertFormPositioner = styled.div`
     text-align:center;
 `;
 
-const InsertForm = styled.form`
+const InsertForm = styled.div`
     background: #f8f9fa;
     padding-left: 32px;
     padding-top: 32px;
     padding-right: 32px;
-    padding-bottom: 12px;
+    padding-bottom: 60px;
     
     
     border-top: 1px solid #e9ecef;
@@ -74,18 +75,33 @@ const InsertAllForm = styled.div`
 
 `
 
-const InsertButton = styled.button`
-    background-color: #9E58D6;
-    color: white;
-    font-size:20px;
-    margin-top:5px;
-    margin-bottom: 50px;
-    height: 35px;
-    width: 35px;
-    
-    border-radius: 50%;
-    border:none;
+const DayButton = styled.button`
+    width: 42px;
+    height: 42px;
+    border-radius: 16px;
+    border: 1px solid #ced4da;
+    background: white;
+    color: #ced4da;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin:10px;
+    ${props =>
+        props.done &&
+        css`
+        border: 1px solid orange;
+        color: orange;
+    `}
 
+`
+
+const ButtonForm=styled.div`
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom:20px;
 `
 
 const Input = styled.input`
@@ -106,26 +122,53 @@ function getId() {
 function RoutineCreate() {
     const [open, setOpen] = useState(false);
     const [input,setInput]=useState('');
-    const [todoItems,setTodoItems]=useRecoilState(todoListState);
+    const [mon,setMon]=useState(false);
+    const [tue,setTue]=useState(false);
+    const [wed,setWed]=useState(false);
+    const [thr,setThr]=useState(false);
+    const [fri,setFri]=useState(false);
+    const [sat,setSat]=useState(false);
+    const [sun,setSun]=useState(false);
+
+    const [routineItems,setRoutineItems]=useRecoilState(routineListState);
 
     const onToggle = () => setOpen(!open);
 
     const addItem=()=>{
         if(input!==''){
-            setTodoItems(() =>[
-                ...todoItems,
+            setRoutineItems(() =>[
+                ...routineItems,
                     {
                         id: getId(),
                         text: input,
-                        done: false
+                        mon: mon,
+                        tue: tue,
+                        wed: wed,
+                        thr: thr,
+                        fri: fri,
+                        sat: sat,
+                        sun: sun
                     }
                 ]
             )
             setInput('')
+            setMon(false)
+            setTue(false)
+            setWed(false)
+            setThr(false)
+            setFri(false)
+            setSat(false)
+            setSun(false)
         }
     }
 
     const onChange=(e)=>{setInput(e.target.value)};
+
+    const onKeyPress= (e)=>{
+        if(e.key =='Enter'){
+            addItem();
+        }
+    }
 
     
 
@@ -133,12 +176,24 @@ function RoutineCreate() {
     <>
         {open && (
             <InsertFormPositioner>
+                
+                    
                 <InsertAllForm>
+                    
                     <InsertForm>
-                        <Input autoFocus placeholder="루틴을 입력 후, Enter 를 누르세요" value={input} onChange={onChange}/>
+                        <ButtonForm>
+                        <DayButton onClick={()=> setMon(!mon)} done={mon}>월</DayButton>
+                        <DayButton onClick={()=> setTue(!tue)} done={tue}>화</DayButton>
+                        <DayButton onClick={()=> setWed(!wed)} done={wed}>수</DayButton>
+                        <DayButton onClick={()=> setThr(!thr)} done={thr}>목</DayButton>
+                        <DayButton onClick={()=> setFri(!fri)} done={fri}>금</DayButton>
+                        <DayButton onClick={()=> setSat(!sat)} done={sat}>토</DayButton>
+                        <DayButton onClick={()=> setSun(!sun)} done={sun}>일</DayButton>
+                        </ButtonForm>
+                        <Input autoFocus placeholder="요일을 선택하고 루틴을 입력 후, Enter 를 누르세요" value={input} onChange={onChange} onKeyPress={onKeyPress}/>
                     
                     </InsertForm>
-                    <InsertButton type="button" onClick={addItem}>+</InsertButton>
+                    
                 </InsertAllForm>
                 
             </InsertFormPositioner>

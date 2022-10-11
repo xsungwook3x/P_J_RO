@@ -56,12 +56,12 @@ const InsertFormPositioner = styled.div`
     text-align:center;
 `;
 
-const InsertForm = styled.form`
+const InsertForm = styled.div`
     background: #f8f9fa;
     padding-left: 32px;
     padding-top: 32px;
     padding-right: 32px;
-    padding-bottom: 12px;
+    padding-bottom: 62px;
     
     
     border-top: 1px solid #e9ecef;
@@ -71,20 +71,6 @@ const InsertAllForm = styled.div`
     background: #f8f9fa;
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
-
-`
-
-const InsertButton = styled.button`
-    background-color: #9E58D6;
-    color: white;
-    font-size:20px;
-    margin-top:5px;
-    margin-bottom: 50px;
-    height: 35px;
-    width: 35px;
-    
-    border-radius: 50%;
-    border:none;
 
 `
 
@@ -127,6 +113,12 @@ function TodoCreate() {
 
     const onChange=(e)=>{setInput(e.target.value)};
 
+    const onKeyPress= (e)=>{
+        if(e.key =='Enter'){
+            addItem();
+        }
+    }
+
     
 
     return (
@@ -135,10 +127,10 @@ function TodoCreate() {
             <InsertFormPositioner>
                 <InsertAllForm onClick={console.log('나다')}>
                     <InsertForm>
-                        <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" value={input} onChange={onChange}/>
+                        <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" value={input} onChange={onChange} onKeyPress={onKeyPress}/>
                     
                     </InsertForm>
-                    <InsertButton type="button" onClick={addItem}>+</InsertButton>
+                    
                 </InsertAllForm>
                 
             </InsertFormPositioner>
