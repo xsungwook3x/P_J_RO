@@ -2,17 +2,10 @@ const { PrismaClient } =require('@prisma/client')
 
 const prisma = new PrismaClient();
 
-const addTodo=async(req,res)=>{
-    const {user_id,title}=req.body;
+const findRoutine=async(req,res)=>{
+    const user_id=parseInt(req.params.user_id);
     try{
-        const new_todo=await prisma.todos.create({
-            data: {
-                user_id,
-                title,
-            },
-        });
-
-        const todo=await prisma.todos.findMany({
+        const routine=await prisma.routines.findMany({
             where:{
                 user_id: user_id
             }
@@ -20,7 +13,7 @@ const addTodo=async(req,res)=>{
 
         res.status(200).send({
             ok: true,
-            data: {todo},
+            data: {routine},
         });
     } catch (err) {
         res.status(409).send({
@@ -29,4 +22,4 @@ const addTodo=async(req,res)=>{
         });
     }
 }
-module.exports=addTodo;
+module.exports=findRoutine;

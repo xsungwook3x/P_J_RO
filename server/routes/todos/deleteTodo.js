@@ -4,12 +4,19 @@ const prisma = new PrismaClient();
 
 const deleteTodo=async(req,res)=>{
     const id=req.params.id;
+    const user_id=req.params.user_id;
     try{
-        const todo=await prisma.todos.delete({
+        const delete_todo=await prisma.todos.delete({
             where:{
                 id: parseInt(id)
             },
             
+        });
+
+        const todo=await prisma.todos.findMany({
+            where:{
+                user_id: parseInt(user_id)
+            }
         });
 
         res.status(200).send({

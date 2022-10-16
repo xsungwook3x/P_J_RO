@@ -16,3 +16,16 @@ model Todos {
     title       String 
     checked     Boolean      @default(false)
 }
+
+model Routines {
+    id          Int          @id @default(autoincrement())
+    user_id     Int          @db.Int()
+    title       String
+    mon         Boolean      @default(false)
+    tue         Boolean      @default(false)
+    wed         Boolean      @default(false)
+    thr         Boolean      @default(false)
+    fri         Boolean      @default(false)
+    sat         Boolean      @default(false)
+    sun         Boolean      @default(false)
+}

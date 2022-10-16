@@ -13,6 +13,6 @@ router.get('/:user_id',findTodo)
 
 router.post('/update',updateTodo)
 
-router.delete('/:id',deleteTodo)
+router.delete('/:id/:user_id',deleteTodo)
 
 module.exports = router;

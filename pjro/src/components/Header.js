@@ -10,7 +10,7 @@ function Header(){
     return(
         <Navbar bg="dark" variant="dark" fixed="top">
         <Container>
-            <Navbar.Brand href="#home">P에서J로</Navbar.Brand>
+            <Navbar.Brand href="/todo">P에서J로</Navbar.Brand>
             <Nav className="me-auto">
                 <Nav.Link href="/todo">Todo</Nav.Link>
                 <Nav.Link href="/routine">Routine</Nav.Link>
