@@ -165,7 +165,7 @@ function RoutineCreate() {
     const onChange=(e)=>{setInput(e.target.value)};
 
     const onKeyPress= (e)=>{
-        if(e.key =='Enter'){
+        if(e.key ==='Enter'){
             addItem();
         }
     }
