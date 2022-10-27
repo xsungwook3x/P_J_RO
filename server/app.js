@@ -8,9 +8,13 @@ const router = require('./routes');
 const app=express();
 const port = 8080;
 
+let corsOptions= {
+    origin: "http://localhost:3000"
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(morgan('short'));
 
 

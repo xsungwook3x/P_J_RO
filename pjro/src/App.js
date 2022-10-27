@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createGlobalStyle} from 'styled-components';
 import Todo from './components/todo/Todo';
 import {RecoilRoot} from 'recoil';
 import {BrowserRouter,Routes,Route,Link} from "react-router-dom";
 import Header from './components/Header';
 import Routine from './components/routine/Routine';
+import { getAllTodos } from './controller/TodoController';
+
 
 
 const GlobalStyle=createGlobalStyle`
@@ -18,6 +20,7 @@ const GlobalStyle=createGlobalStyle`
 function App() {
   
   
+
   return (
     <RecoilRoot>
     <div className="App">
@@ -26,8 +29,9 @@ function App() {
       <BrowserRouter>
         <Header/>
         <Routes>
-          <Route path="/todo" element={<Todo/>}></Route>
-          <Route path="/routine" element={<Routine/>}></Route>
+        <Route path="/*" element={<Todo/>}></Route>
+          <Route path="/todo/*" element={<Todo/>}></Route>
+          <Route path="/routine/*" element={<Routine/>}></Route>
         </Routes>
         
       </BrowserRouter>

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';
 import {todoListState} from '../../recoil/Recoil.js';
 import { useRecoilState } from "recoil";
+import { getAllTodos } from '../../controller/TodoController';
 
 const TodoListBlock=styled.div`
     flex: 1;
