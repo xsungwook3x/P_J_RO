@@ -4,6 +4,8 @@ import {MdAdd} from 'react-icons/md';
 import { routineListState } from '../../recoil/Recoil';
 import {useRecoilState} from 'recoil';
 import { Button } from 'bootstrap';
+import { collection, query, getDocs,doc,setDoc} from "firebase/firestore";
+import { db } from '../../firebase';
 
 const CircleButton=styled.button`
 background: gray;
@@ -134,23 +136,35 @@ function RoutineCreate() {
 
     const onToggle = () => setOpen(!open);
 
-    const addItem=()=>{
+    const getAllRoutines = async () => {
+        const q=query(collection(db,"routine"));
+        let tmp=[]
+
+        const querySnapshot=await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            tmp.push({id:doc.id , title:doc.data().title, mon:doc.data().mon, tue:doc.data().tue, wed:doc.data().wed, thr:doc.data().thr, fri:doc.data().fri, sat:doc.data().sat, sun:doc.data().sun})
+        });
+
+        setRoutineItems(tmp);
+    }
+
+    const addItem=async ()=>{
         if(input!==''){
-            setRoutineItems(() =>[
-                ...routineItems,
-                    {
-                        id: getId(),
-                        text: input,
-                        mon: mon,
-                        tue: tue,
-                        wed: wed,
-                        thr: thr,
-                        fri: fri,
-                        sat: sat,
-                        sun: sun
-                    }
-                ]
-            )
+            let data={
+                title: input,
+                mon: mon,
+                tue: tue,
+                wed: wed,
+                thr: thr,
+                fri: fri,
+                sat: sat,
+                sun: sun
+            }
+
+            const newRoutineRef=doc(collection(db,"routine"));
+
+            await setDoc(newRoutineRef,data)
+            
             setInput('')
             setMon(false)
             setTue(false)
@@ -159,6 +173,8 @@ function RoutineCreate() {
             setFri(false)
             setSat(false)
             setSun(false)
+
+            getAllRoutines()
         }
     }
 

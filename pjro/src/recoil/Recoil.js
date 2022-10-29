@@ -1,4 +1,4 @@
-import {atom} from 'recoil';
+import {atom,selector} from 'recoil';
 
 export const todoListState=atom({
     key:'todoListState',
@@ -41,4 +41,19 @@ export const routineListState=atom({
 
         }
     ]
+});
+
+export const countTodoWorkState = selector({
+    key:'countTodoWorkState',
+    get:({get})=>{
+        const list=get(todoListState)
+
+        let count=0
+        list.forEach((data)=>{
+            if(!data.done){
+                count++
+            }
+        })
+        return count
+    }
 })

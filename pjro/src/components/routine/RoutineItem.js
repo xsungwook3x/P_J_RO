@@ -3,6 +3,8 @@ import styled, {css} from 'styled-components';
 import {MdDone,MdDelete} from 'react-icons/md';
 import {useRecoilState} from 'recoil';
 import { routineListState } from '../../recoil/Recoil';
+import { collection, query, getDocs,deleteDoc,doc } from "firebase/firestore";
+import { db } from '../../firebase';
 
 const Remove = styled.div`
     display: flex;
@@ -61,19 +63,26 @@ const Text = styled.div`
 `;
 
 
-const removeItemAtIndex =(arr,index)=>{
-    return [...arr.slice(0,index),...arr.slice(index+1)];
-}
-
 function RoutineItem({ item }) {
 
     const [routineList,setRoutineList]=useRecoilState(routineListState);
-    const index=routineList.findIndex((listItem)=> listItem.id === item.id);
+    
+    const getAllRoutines = async () => {
+        const q=query(collection(db,"routine"));
+        let tmp=[]
 
-    const deleteItem = () => {
-        const newList=removeItemAtIndex(routineList,index);
+        const querySnapshot=await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            tmp.push({id:doc.id , title:doc.data().title, mon:doc.data().mon, tue:doc.data().tue, wed:doc.data().wed, thr:doc.data().thr, fri:doc.data().fri, sat:doc.data().sat, sun:doc.data().sun})
+        });
 
-        setRoutineList(newList);
+        setRoutineList(tmp);
+    }
+
+    const deleteItem = async () => {
+        await deleteDoc(doc(db,"routine",item.id))
+
+        getAllRoutines();
     }
 
     const findDay = (mon,tue,wed,thr,fri,sat,sun) => {
@@ -81,20 +90,20 @@ function RoutineItem({ item }) {
         let today = new Date();
         let day = today.getDay();  // 요일
 
-        if(day==0 && sun == true) return true
-        else if (day==1 && mon==true) return true
-        else if (day==2 && tue==true) return true
-        else if (day==3 && wed ==true) return true
-        else if (day==4 && thr == true) return true
-        else if(day==5 && fri==true) return true
-        else if ( day==6 && sat==true) return true
+        if(day===0 && sun === true) return true
+        else if (day===1 && mon===true) return true
+        else if (day===2 && tue===true) return true
+        else if (day===3 && wed ===true) return true
+        else if (day===4 && thr === true) return true
+        else if(day===5 && fri===true) return true
+        else if ( day===6 && sat===true) return true
         else return false
     }
 
     return (
     <RoutineItemBlock>
         <CheckCircle done={findDay(item.mon,item.tue,item.wed,item.thr,item.fri,item.sat,item.sun)} >{<MdDone />}</CheckCircle>
-        <Text done={findDay(item.mon,item.tue,item.wed,item.thr,item.fri,item.sat,item.sun)}>{item.text}</Text>
+        <Text done={findDay(item.mon,item.tue,item.wed,item.thr,item.fri,item.sat,item.sun)}>{item.title}</Text>
         <Remove>
             <MdDelete onClick={deleteItem}/>
         </Remove>

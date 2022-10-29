@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import {  countTodoWorkState, todoListState } from '../../recoil/Recoil';
 
 const TodoHeadBlock = styled.div`
     padding-top: 48px;
@@ -29,6 +31,8 @@ const TodoHeadBlock = styled.div`
 `;
 
 function TodoHead(){
+    const countTodoWork= useRecoilValue(countTodoWorkState);
+
     const days=['일','월','화','수','목','금','토'];
 
     let today = new Date();   
@@ -37,12 +41,15 @@ function TodoHead(){
     let month = today.getMonth() + 1;  // 월
     let date = today.getDate();  // 날짜
     let day = today.getDay();  // 요일
+
+    
+    
     
     return(
         <TodoHeadBlock>
             <h1>{year}년 {month}월 {date}일</h1>
             <div className='day'>{days[day]}요일</div>
-            <div className='tasks-left'>할 일 2개 남음</div>
+            <div className='tasks-left'>할 일 {countTodoWork}개 남음</div>
         </TodoHeadBlock>
     )
 }

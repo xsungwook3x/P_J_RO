@@ -8,6 +8,7 @@ import Routine from './components/routine/Routine';
 import { getAllTodos } from './controller/TodoController';
 import { db, firebase } from './firebase';
 import { collection, getDocs } from "firebase/firestore";
+import NotFound from './components/NotFound';
 
 
 
@@ -30,9 +31,10 @@ function App() {
       <BrowserRouter>
         <Header/>
         <Routes>
-        <Route path="/*" element={<Todo/>}></Route>
+          <Route path="/*" element={<Todo/>}></Route>
           <Route path="/todo/*" element={<Todo/>}></Route>
           <Route path="/routine/*" element={<Routine/>}></Route>
+          
         </Routes>
         
       </BrowserRouter>
