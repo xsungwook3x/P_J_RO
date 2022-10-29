@@ -1,6 +1,10 @@
 import React,{useState} from 'react';
 import styled, {css} from 'styled-components';
 import {MdAdd} from 'react-icons/md';
+import { todoListState } from '../../recoil/Recoil';
+import {useRecoilState} from 'recoil';
+import { collection, query, where, getDocs,doc,setDoc } from "firebase/firestore";
+import { db } from '../../firebase';
 
 const CircleButton=styled.button`
 background: gray;
@@ -51,19 +55,26 @@ const InsertFormPositioner = styled.div`
     bottom: 0;
     left: 0;
     position: absolute;
+    text-align:center;
 `;
 
-const InsertForm = styled.form`
+const InsertForm = styled.div`
     background: #f8f9fa;
     padding-left: 32px;
     padding-top: 32px;
     padding-right: 32px;
-    padding-bottom: 72px;
-
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+    padding-bottom: 62px;
+    
+    
     border-top: 1px solid #e9ecef;
 `;
+
+const InsertAllForm = styled.div`
+    background: #f8f9fa;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+
+`
 
 const Input = styled.input`
     padding: 12px;
@@ -75,18 +86,69 @@ const Input = styled.input`
     box-sizing: border-box;
 `;
 
+let id = 5;
+function getId() {
+    return id++;
+}
+
 function TodoCreate() {
     const [open, setOpen] = useState(false);
+    const [input,setInput]=useState('');
+    const [todoItems,setTodoItems]=useRecoilState(todoListState);
 
     const onToggle = () => setOpen(!open);
+    
+    const getAllTodos = async () =>{
+        const q = query(collection(db, "todo"));
+        let tmp=[]
+    
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+            tmp.push({id:doc.id , title:doc.data().title, done:doc.data().done})
+            
+        });
+
+        setTodoItems(tmp)
+        }
+
+    const addItem= async ()=>{
+        if(input!==''){
+
+            let data={title:input,done:false}
+
+            const newTodoRef=doc(collection(db,"todo"));
+
+            await setDoc(newTodoRef,data)
+            
+            setInput('')
+
+            getAllTodos()
+        }
+    }
+
+    const onChange=(e)=>{setInput(e.target.value)};
+
+    const onKeyPress= (e)=>{
+        if(e.key =='Enter'){
+            addItem();
+        }
+    }
+
+    
 
     return (
     <>
         {open && (
             <InsertFormPositioner>
-                <InsertForm>
-                    <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" />
-                </InsertForm>
+                <InsertAllForm onClick={console.log('나다')}>
+                    <InsertForm>
+                        <Input autoFocus placeholder="할 일을 입력 후, Enter 를 누르세요" value={input} onChange={onChange} onKeyPress={onKeyPress}/>
+                    
+                    </InsertForm>
+                    
+                </InsertAllForm>
+                
             </InsertFormPositioner>
         )}
         <CircleButton onClick={onToggle} open={open}>
