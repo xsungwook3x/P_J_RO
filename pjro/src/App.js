@@ -6,6 +6,8 @@ import {BrowserRouter,Routes,Route,Link} from "react-router-dom";
 import Header from './components/Header';
 import Routine from './components/routine/Routine';
 import { getAllTodos } from './controller/TodoController';
+import { db, firebase } from './firebase';
+import { collection, getDocs } from "firebase/firestore";
 
 
 
@@ -20,7 +22,6 @@ const GlobalStyle=createGlobalStyle`
 function App() {
   
   
-
   return (
     <RecoilRoot>
     <div className="App">

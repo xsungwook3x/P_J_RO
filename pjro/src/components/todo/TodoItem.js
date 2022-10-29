@@ -3,6 +3,8 @@ import styled, {css} from 'styled-components';
 import {MdDone,MdDelete} from 'react-icons/md';
 import {useRecoilState} from 'recoil';
 import { todoListState } from '../../recoil/Recoil';
+import { collection, query, where, getDocs,doc, updateDoc,deleteDoc } from "firebase/firestore";
+import { db } from '../../firebase';
 
 const Remove = styled.div`
     display: flex;
@@ -59,35 +61,48 @@ const Text = styled.div`
     `}
 `;
 
-const replaceItemAtIndex =(arr,index,newValue)=>{
-    return [...arr.slice(0,index),newValue,...arr.slice(index+1)];
-}
-
-const removeItemAtIndex =(arr,index)=>{
-    return [...arr.slice(0,index),...arr.slice(index+1)];
-}
 
 function TodoItem({ item }) {
 
     const [todoList,setTodoList]=useRecoilState(todoListState);
-    const index=todoList.findIndex((listItem)=> listItem.id === item.id);
 
-    const toggleItemCompletion = () => {
-        const newList = replaceItemAtIndex(todoList,index,{...item,done:!item.done});
+    const getAllTodos = async () =>{
+        const q = query(collection(db, "todo"));
+        let tmp=[]
+    
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+            tmp.push({id:doc.id , title:doc.data().title, done:doc.data().done})
+            
+        });
 
-        setTodoList(newList)
+        setTodoList(tmp)
+        }
+
+    const toggleItemCompletion = async () => {
+        
+        const washingtonRef=doc(db,"todo",item.id);
+
+        await updateDoc(washingtonRef,{
+            done:!item.done
+        });
+
+        
+
+        getAllTodos();
     }
 
-    const deleteItem = () => {
-        const newList=removeItemAtIndex(todoList,index);
+    const deleteItem = async () => {
+        await deleteDoc(doc(db,"todo",item.id))
 
-        setTodoList(newList);
+        getAllTodos();
     }
 
     return (
     <TodoItemBlock>
         <CheckCircle done={item.done} onClick={toggleItemCompletion}>{item.done && <MdDone />}</CheckCircle>
-        <Text done={item.done}>{item.text}</Text>
+        <Text done={item.done}>{item.title}</Text>
         <Remove>
             <MdDelete onClick={deleteItem}/>
         </Remove>

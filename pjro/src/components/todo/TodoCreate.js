@@ -3,6 +3,8 @@ import styled, {css} from 'styled-components';
 import {MdAdd} from 'react-icons/md';
 import { todoListState } from '../../recoil/Recoil';
 import {useRecoilState} from 'recoil';
+import { collection, query, where, getDocs,doc,setDoc } from "firebase/firestore";
+import { db } from '../../firebase';
 
 const CircleButton=styled.button`
 background: gray;
@@ -95,19 +97,33 @@ function TodoCreate() {
     const [todoItems,setTodoItems]=useRecoilState(todoListState);
 
     const onToggle = () => setOpen(!open);
+    
+    const getAllTodos = async () =>{
+        const q = query(collection(db, "todo"));
+        let tmp=[]
+    
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+            tmp.push({id:doc.id , title:doc.data().title, done:doc.data().done})
+            
+        });
 
-    const addItem=()=>{
+        setTodoItems(tmp)
+        }
+
+    const addItem= async ()=>{
         if(input!==''){
-            setTodoItems(() =>[
-                ...todoItems,
-                    {
-                        id: getId(),
-                        text: input,
-                        done: false
-                    }
-                ]
-            )
+
+            let data={title:input,done:false}
+
+            const newTodoRef=doc(collection(db,"todo"));
+
+            await setDoc(newTodoRef,data)
+            
             setInput('')
+
+            getAllTodos()
         }
     }
 

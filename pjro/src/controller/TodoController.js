@@ -1,17 +1,20 @@
-import {doc,getDoc} from "firebase/firestore";
-import { firebase } from '../firebase';
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useRecoilState } from 'recoil';
+import { db, firebase } from '../firebase';
+import { todoListState } from '../recoil/Recoil';
 
-// const db =firebase.firestore();
 
 
-// // export const getAllTodos = async () =>{
-// //     const docRef=doc(db,"todo","87vExTlkUfl5b1pBNur5");
-// //     const docSnap = await getDoc(docRef);
+// export const getAllTodos = async () =>{
+//     const q = query(collection(db, "todo"));
+//     let tmp=[]
 
-// //     if (docSnap.exists()){
-// //         console.log("Document data:",docSnap.data());
-
-// //     }else{
-// //         console.log("No such document!");
-// //     }
-// // }
+//     const querySnapshot = await getDocs(q);
+//     querySnapshot.forEach((doc) => {
+//   // doc.data() is never undefined for query doc snapshots
+//         tmp.push({id:doc.id , title:doc.data().title,done:doc.data().done})
+        
+//     });
+//     return tmp
+    
+// }
