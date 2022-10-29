@@ -12,6 +12,7 @@ import NotFound from './components/NotFound';
 
 
 
+
 const GlobalStyle=createGlobalStyle`
   body {
     background: #e9ecef;
